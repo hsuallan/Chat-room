@@ -4,6 +4,7 @@
 <script>
     $(function () {
         var socket = io();
+        let uid = "";
         $('form').submit(function () {
             socket.emit('chat id', $('#u').val());
             socket.emit('chat message', $('#m').val());
@@ -12,10 +13,10 @@
         });
        
         socket.on('chat id', function (id) {
-            $('#messages').append($('<li>').text(id));
+            uid = id;
         });
         socket.on('chat message', function (msg) {
-            $('#messages').append(text(msg));
+            $('#messages').append($("<li>").text(uid).append("："+msg));
         });
         
 
