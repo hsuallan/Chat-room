@@ -4,30 +4,19 @@
 <script>
     $(function () {
         var socket = io();
-        let uid = "";
-        $('form').submit(function () {
-            socket.emit('chat id', $('#u').val());
-            socket.emit('chat message', $('#m').val());
+        $('form').submit(() => { 
+            socket.emit('chat room', $('#u').val(),$('#m').val());
             $('#m').val('');
             return false;
         });
-       
-        socket.on('chat id', function (id) {
-            uid = id;
+        socket.on('chat room', (id,msg)=> {
+            $('#messages').append($("<li>").text(id+":"+msg));
         });
-        socket.on('chat message', function (msg) {
-            $('#messages').append($("<li>").text(uid).append("："+msg));
-        });
-        
+        socket.on('alert', (msg) => {
+            alert(msg);
+        });        
 
     });
-</script>
-<script>
-    function a() {
-        var s
-
-    }
-
 </script>
 <html>
 <head>

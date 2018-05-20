@@ -14,15 +14,21 @@ var io = require("socket.io")(http);
 app.get("/", (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
-io.on('connection', function (socket) {
-    socket.on('chat message', function (msg) {
-        io.emit('chat message',msg);
+io.on('connection', (socket) => {
+    let table = {};
+    let sid = socket.id;
+    //console.log(socket.id);
+    socket.on('disconnect', () => {
+        io.emit('alert', "someone is out");
     });
-    socket.on('chat id', (id) => {
-        io.emit('chat id', id);
-    })
+    socket.on('chat room', (uid,msg)=> {
+        io.emit('chat room', uid, msg);
+        table = { uid, sid };
+        console.log(table);
+        
+    });
 });
 
-http.listen(1337, function () {
+http.listen(1337, ()=> {
     console.log('listening on *:1337');
 });
