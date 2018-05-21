@@ -7,25 +7,29 @@ http.createServer(function (req, res) {
     res.end('Hello World\n');
 }).listen(port);
 */
+var express = require('express')
 var app = require("express")();
 var http = require("http").Server(app);
+var path = require('path');
 var io = require("socket.io")(http);
 // make a server by express
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.get("/", (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
+io.clients((err, cli) => {
+    if (err) throw err;
+    console.log(cli);
+});
 io.on('connection', (socket) => {
-    let table = {};
-    let sid = socket.id;
     //console.log(socket.id);
+    socket.on('new user', (uid) => { socket.user_id = uid; });
     socket.on('disconnect', () => {
-        io.emit('alert', "someone is out");
+        io.emit('leave message',  socket.user_id+" is out");
     });
     socket.on('chat room', (uid,msg)=> {
-        io.emit('chat room', uid, msg);
-        table = { uid, sid };
-        console.log(table);
-        
+        io.emit('chat room', uid, msg);    
     });
 });
 
