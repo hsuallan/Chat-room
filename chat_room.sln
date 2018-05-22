@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2015
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "NodejsWebApp1", "NodejsWebApp1\NodejsWebApp1.njsproj", "{55AC1A07-BE4D-4602-8EB2-6EC0265940A1}"
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "chat_room", "main\chat_room.njsproj", "{55AC1A07-BE4D-4602-8EB2-6EC0265940A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
