@@ -24,12 +24,20 @@ io.clients((err, cli) => {
 });
 io.on('connection', (socket) => {
     //console.log(socket.id);
-    socket.on('new user', (uid) => { socket.user_id = uid; });
+    socket.on('new user', (uid)=> {
+        socket.user_id = uid;
+        io.to(socket.id).emit('welcome message',"Welcome to chat room If you need help  plz enter in .help ")
+    });
     socket.on('disconnect', () => {
+        if (!socket.user_id) socket.user_id = 'Someone';
         io.emit('leave message',  socket.user_id+" is out");
     });
-    socket.on('chat room', (uid,msg)=> {
-        io.emit('chat room', uid, msg);    
+    socket.on('chat room', (uid, msg) => {
+        if (msg == '.help') {
+            io.to(socket.id).emit('alert', 'This is help message');
+        } else {
+            io.emit('chat room', uid, msg);    
+        }
     });
 });
 
