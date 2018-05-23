@@ -16,8 +16,8 @@
             $('#m').val('');
             return false;
         });
-        socket.on('welcome message', (msg) => {//someone join call it
-            $('#messages').append($("<li>").text(msg));
+        socket.on('welcome message', (msg,cmd) => {//someone join call it
+            $('#messages').append($('<li style = "color: darkorchid;">').text(msg).append(cmd));
         });
         socket.on('chat room', (id, msg) => {
             $('#messages').append($("<li>").text(id + ":" + msg));
@@ -46,6 +46,7 @@
 
         body {
             font: 13px Helvetica, Arial;
+            
         }
 
         form {

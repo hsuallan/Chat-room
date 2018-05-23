@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
     //console.log(socket.id);
     socket.on('new user', (uid)=> {
         socket.user_id = uid;
-        io.to(socket.id).emit('welcome message',"Welcome to chat room If you need help  plz enter in .help ")
+        io.to(socket.id).emit('welcome message',"Welcome to chat room If you need help  plz enter in ","<strong>.help</strong>")
     });
     socket.on('disconnect', () => {
         if (!socket.user_id) socket.user_id = 'Someone';
@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
     });
     socket.on('chat room', (uid, msg) => {
         if (msg == '.help') {
-            io.to(socket.id).emit('alert', 'This is help message');
+            io.to(socket.id).emit('alert', 'Enter in message then you can send, Enjoy chat with people');
         } else {
             io.emit('chat room', uid, msg);    
         }
