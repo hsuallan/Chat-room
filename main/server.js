@@ -1,4 +1,4 @@
-/*'use strict';
+﻿/*'use strict';
 var http = require('http');
 var port = process.env.PORT || 1337;
 
@@ -12,6 +12,7 @@ var app = require("express")();
 var http = require("http").Server(app);
 var path = require('path');
 var io = require("socket.io")(http);
+var utf8 = require("utf8")
 // make a server by express
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -24,7 +25,8 @@ io.clients((err, cli) => {
 });
 io.on('connection', (socket) => {
     //console.log(socket.id);
-    socket.on('new user', (uid)=> {
+    let f_timestamp = new Date().valueOf();  
+    socket.on('new user', (uid) => {
         socket.user_id = uid;
         io.to(socket.id).emit('welcome message',"Welcome to chat room If you need help  plz enter in ","<strong>.help</strong>")
     });
@@ -36,7 +38,12 @@ io.on('connection', (socket) => {
         if (msg == '.help') {
             io.to(socket.id).emit('alert', 'Enter in message then you can send, Enjoy chat with people');
         } else {
-            io.emit('chat room', uid, msg);    
+            let l_timestamp = new Date().valueOf(); 
+            if (l_timestamp - f_timestamp > 1000) {
+                io.emit('chat room', uid, msg);
+                f_timestamp = new Date().valueOf();  
+            }
+            else { io.to(socket.id).emit('alert', "別洗版");}
         }
     });
 });

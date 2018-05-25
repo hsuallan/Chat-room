@@ -26,6 +26,7 @@
             $('#messages').append($("<li>").text(msg));
         });
         socket.on('alert', (msg) => {
+            
             alert(msg);
         });
     });
@@ -36,7 +37,8 @@
 
 <html>
 <head>
-    <title>Socket.IO chat</title>
+    <title>Chat Rooom</title>
+    <meta charset="utf-8">
     <style>
         * {
             margin: 0;

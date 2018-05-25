@@ -5,6 +5,7 @@ Now we can
 - Hint someone join the chat room    
 - Hint someone exit the chat room  
 - When you try to exit ,browser will alert
+- Anti Message flooding
 # Getting Started
 ```
 git clone https://github.com/hsuallan/Chat-room.git 
