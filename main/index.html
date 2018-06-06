@@ -9,8 +9,13 @@
             uid = window.prompt('Enter in your id');
             $('#u').val(uid);
             socket.emit('new user', uid);
+            socket.emit('online');
         }
         while (!uid) set_uid();//no uid set it!
+        $('#b').click(() => {
+            socket.emit('pass');
+            $('#b').hide();
+        });
         $('form').submit(() => {
             socket.emit('chat room', uid, $('#m').val());
             $('#m').val('');
@@ -18,6 +23,9 @@
         });
         socket.on('welcome message', (msg,cmd) => {//someone join call it
             $('#messages').append($('<li style = "color: darkorchid;">').text(msg).append(cmd));
+        });
+        socket.on('pass', (msg) => {
+            $('#messages').append($('<li style = "color:lightsalmon;">').text(msg));
         });
         socket.on('chat room', (id, msg) => {
             $('#messages').append($("<li>").text(id + ":" + msg));
@@ -27,6 +35,13 @@
         });
         socket.on('alert', (msg) => {
             alert(msg);
+        });
+        socket.on('online', (docs) => {
+            $('#oul').empty();
+            $('#onum').text("Now online "+docs.length);
+            docs.forEach((c) => {
+                $('#oul').append($("<li>").text("Uid : "+c.uid));
+            });
         });
     });
     window.onbeforeunload = function (event) {//out alert message
@@ -47,7 +62,9 @@
         body {
             font: 13px Helvetica, Arial;
             
+            
         }
+
 
         form {
             background: #000;
@@ -95,9 +112,30 @@
                 #messages li:nth-child(odd) {
                     background: #eee;
                 }
+        #online{
+            position:absolute;
+            left:85%
+        }
+        #online h3{
+            background-color:aqua;
+            color:darkolivegreen;
+        }
+        #oul li {
+            padding: 5px 10px;
+            background:#22d54c
+        }
+
+            #oul li:nth-child(odd) {
+                background: #f33c3c;
+            }
     </style>
 </head>
 <body>
+    <div id="online">
+        <h3 id="onum"></h3>
+        <ul id="oul"></ul>
+    </div>
+    <button id="b" style="background:#0ff">get pass</button>
     <ul id="messages"></ul>
     <form action="" id="form">
         <span>ID：</span>
