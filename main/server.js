@@ -43,8 +43,9 @@ io.on('connection', (socket) => {
         let p = dbcrud.msg_getpass();
         p.exec((err, docs) => {
             io.to(socket.id).emit('pass', "----pass message-----");
+            docs.reverse();
             docs.forEach((li) => {
-                io.to(socket.id).emit('chat room', li["uid"], li["msg"]);
+                io.to(socket.id).emit('pass', li["uid"],li["msg"]);
             });
             io.to(socket.id).emit('pass',"----pass message-----");
         });
@@ -65,11 +66,14 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         if (!socket.user_id) socket.user_id = 'Someone';
         io.emit('leave message', socket.user_id + " is out");
-        dbcrud.user_login_out(socket);
-        dbcrud.user_online().exec((err, docs) => {
-            if (err) throw err;
-            io.emit('online', docs);
+        dbcrud.user_login_out(socket).exec(() => {
+            dbcrud.user_online().exec((err, docs) => {
+                if (err) throw err;
+                io.emit('online', docs);
+                console.log('emit');
+            });
         });
+       
     });
 });
 

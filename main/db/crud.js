@@ -23,7 +23,7 @@ class crud {
 
     }
     user_login_out(socket) {
-        u.update({ "uid": socket.user_id }, { "online": false, "socket_id":null}).then(console.log("update success"));
+        return u.update({ "uid": socket.user_id }, { "online": false, "socket_id":null});
     }
     user_online() {
         return u.find({ "online": true });
