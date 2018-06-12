@@ -38,15 +38,32 @@
     <Compile Include="db\users.js">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="public\javascript\index.js">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="routes\index.js">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="routes\login.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="server.js" />
-    <Content Include="index.html">
+    <Content Include="public\html\index.html">
       <SubType>Code</SubType>
     </Content>
     <Content Include="package.json" />
+    <Content Include="public\css\index.css">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="db\" />
+    <Folder Include="public\" />
+    <Folder Include="public\css\" />
+    <Folder Include="public\javascript\" />
+    <Folder Include="public\html\" />
+    <Folder Include="routes\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />

@@ -1,0 +1,44 @@
+﻿<!doctype html>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="/javascript/index.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/index.css" />
+    <title>Socket.IO chat</title>
+</head>
+<body>
+    <div id="creat-page">
+        <form action="" id="ctform">
+            <input id="ctmail" placeholder="Email" type="email" required /><br>
+            <input id="ctid" placeholder="ID" maxlength="15" required /><br>
+            <input id="ctpw" placeholder="pw" type="password" maxlength="15" required /><br />
+            <input id="ctpw" placeholder="Repeat the pw" type="password" maxlength="15" required /><br />
+            <button type="submit" id="lb">Creat&Login</button> <button type="button" id="bk">Back</button>
+        </form>
+    </div>
+    <div id="login-page">
+        <form action="" id="lgform">
+            <input id="lgid" placeholder="ID" maxlength="15" required /><br>
+            <input id="lgpw" placeholder="pw" type="password" maxlength="15" required /><br />
+            <button type="submit" id="lb">Login</button><button type="button" id="nc">New account</button>
+        </form>
+    </div>
+    <div id="chat-page" hidden>
+        <div id="online" class="column side">
+            <ul id="oul">
+                <content id="content"></content>
+            </ul>
+        </div>
+        <button id="b"> get pass</button>
+        <ul id="messages" class="column middle"></ul>
+        <form action="" id="chat-form">
+            <span style="background:#000">ID：</span>
+            <input id="u" autocomplete="off" />
+            <span style="background:#000">Message：</span>
+            <input id="m" autocomplete="on" /><button>Send</button>
+        </form>
+    </div>
+</body>
+</html>

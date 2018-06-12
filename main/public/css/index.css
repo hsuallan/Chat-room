@@ -1,0 +1,138 @@
+﻿* {
+    background: rgb(49,51,55 );
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.column.side {
+    width: 18%;
+}
+
+/* Middle column */
+.column.middle {
+    width: 75%;
+}
+
+body {
+    font: 13px Helvetica, Arial;
+}
+
+#login-page {
+    height: 100%;
+    position: fixed;
+    width: 100%;
+}
+
+    #login-page #lgform {
+        height: 35%;
+        position: absolute;
+        text-align: center;
+        top: 40%;
+        width: 100%;
+    }
+
+#creat-page {
+    height: 100%;
+    position: fixed;
+    width: 100%;
+}
+
+    #creat-page #ctform {
+        height: 35%;
+        position: absolute;
+        text-align: center;
+        top: 40%;
+        width: 100%;
+    }
+
+form {
+    position: absolute;
+    background: #000;
+    padding: 3px;
+    bottom: 0px;
+    width: 100%;
+}
+
+    form #u {
+        background: azure;
+        border: hidden;
+        padding: 10px;
+        margin-right: .5%;
+        width: 8%;
+    }
+
+    form input {
+        background: azure;
+        border: 0;
+        padding: 10px;
+        margin-right: .5%;
+        width: 50%;
+    }
+
+    form span {
+        color: azure;
+    }
+
+    form button {
+        background: azure;
+        width: 9%;
+        background: rgb(130, 224, 255);
+        border: none;
+        padding: 10px;
+    }
+
+#messages {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+    #messages li {
+        padding: 5px 10px;
+        color: rgb(0,79,185);
+        background: #2fa;
+    }
+
+        #messages li:nth-child(odd) {
+            color: rgb(0,79,185);
+            background: #efa;
+        }
+
+#online {
+    position: absolute;
+    right: 5%
+}
+
+#oul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+    #oul content {
+        font-size: 145%;
+        color: cyan;
+    }
+
+    #oul li {
+        padding: 5px 10px;
+        background: cyan
+    }
+
+        #oul li:nth-child(odd) {
+            background: azure;
+        }
+
+#b {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 5px 5px;
+    text-align: center;
+    border-radius: 20%;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+}

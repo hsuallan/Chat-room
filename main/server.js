@@ -1,24 +1,19 @@
-/*'use strict';
-var http = require('http');
-var port = process.env.PORT || 1337;
-
-http.createServer(function (req, res) {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Hello World\n');
-}).listen(port);
-*/
-var express = require('express')
+'use strict';
+var express = require('express');
 var app = require("express")();
-var http = require("http").Server(app);
 var path = require('path');
-var io = require("socket.io")(http);
-var crud = require("./db/crud");
-// make a server by express
-app.use(express.static(path.join(__dirname, 'public')));
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+var logger = require('morgan');
+var debug = require('debug');
 
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + '/index.html');
-});
+var crud = require("./db/crud");
+var routes = require('./routes/index.js');
+// make a server by express
+app.set('port', process.env.PORT || 3000);
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(logger('dev'));
+app.use('/', routes);
 io.clients((err, cli) => {
     if (err) throw err;
     console.log(cli);
@@ -60,7 +55,7 @@ io.on('connection', (socket) => {
                 dbcrud.msg_add(uid, msg);
                 f_timestamp = new Date().valueOf();
             }
-            else { io.to(socket.id).emit('alert', "§O¬~ª©"); }
+            else { io.to(socket.id).emit('alert', "Don't message flooding"); }
         }
     });
     socket.on('disconnect', () => {
@@ -76,7 +71,6 @@ io.on('connection', (socket) => {
        
     });
 });
-
-http.listen(1337, ()=> {
-    console.log('listening on *:1337');
+server.listen(app.get('port'), ()=> {
+    console.log('listening on ' + app.get('port'));
 });
