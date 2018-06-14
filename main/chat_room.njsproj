@@ -29,6 +29,9 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="SSL\SSL.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="db\crud.js">
       <SubType>Code</SubType>
     </Compile>
@@ -48,6 +51,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="server.js" />
+    <Content Include="public\html\login.html">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="public\html\new.html">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="SSL\yourcert.pem" />
+    <Content Include="SSL\yourcsr.csr" />
+    <Content Include="SSL\yourkey.pem" />
     <Content Include="public\html\index.html">
       <SubType>Code</SubType>
     </Content>
@@ -58,6 +70,7 @@
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="SSL\" />
     <Folder Include="db\" />
     <Folder Include="public\" />
     <Folder Include="public\css\" />

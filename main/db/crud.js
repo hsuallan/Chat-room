@@ -15,12 +15,16 @@ class crud {
             "pw":null,
             "online": true,
             "socket_id": socket.id,
+            "login_time": socket.login_time,
         });
         newuser.save(function (err) {if(err) throw err });
         console.log(newuser+" is save");
     }
-    user_login_in(id,password) {
-
+    newuser(obj) {
+        return u.find({ "uid": id });
+    }
+    user_login(id,pw) {
+        return u.find({ "uid": id, "pw": pw });
     }
     user_login_out(socket) {
         return u.update({ "uid": socket.user_id }, { "online": false, "socket_id":null});
@@ -36,8 +40,8 @@ class crud {
         });
         newmsg.save().then(console.log(newmsg['msg']+" save "));
     }
-    msg_getpass() {
-        return m.find({});
+    msg_getpass(socket) {
+        return m.find({ "time": { $lte: socket.login_time }});
     }
 }
 module.exports = crud;

@@ -2,15 +2,19 @@
 var express = require('express');
 var app = require("express")();
 var path = require('path');
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+var bodyParser = require('body-parser');
 var logger = require('morgan');
 var debug = require('debug');
-
 var crud = require("./db/crud");
+var ssl = require('./SSL/SSL');
+var https = require('https');
+var server = https.createServer(ssl.options, app);
+var io = require('socket.io')(server);
 var routes = require('./routes/index.js');
 // make a server by express
 app.set('port', process.env.PORT || 3000);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use('/', routes);
@@ -20,11 +24,12 @@ io.clients((err, cli) => {
 });
 io.on('connection', (socket) => {
     //console.log(dbcrud);
-    dbcrud = new crud();
+    const dbcrud = new crud();
     dbcrud.connect(); 
     let f_timestamp = new Date().valueOf();
     socket.on('new user', (uid)=> {
         socket.user_id = uid;
+        socket.login_time = new Date().valueOf();
         io.to(socket.id).emit('welcome message', "Welcome to chat room If you need help  plz enter in ", "<strong>.help</strong>")  
         dbcrud.user_add(socket);
     }); 
@@ -35,7 +40,7 @@ io.on('connection', (socket) => {
         });
     });
     socket.on('pass', () => {
-        let p = dbcrud.msg_getpass();
+        let p = dbcrud.msg_getpass(socket);
         p.exec((err, docs) => {
             io.to(socket.id).emit('pass', "----pass message-----");
             docs.reverse();
@@ -71,6 +76,7 @@ io.on('connection', (socket) => {
        
     });
 });
+
 server.listen(app.get('port'), ()=> {
     console.log('listening on ' + app.get('port'));
 });

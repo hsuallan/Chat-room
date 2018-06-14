@@ -4,6 +4,7 @@ const users = mongoose.Schema({
     "pw":String,
     "online": Boolean,
     "socket_id": String,
+    "login_time":Number,
 },
     {
         "versionKey": false
