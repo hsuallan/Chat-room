@@ -10,6 +10,7 @@ var ssl = require('./SSL/SSL');
 var https = require('https');
 var server = https.createServer(ssl.options, app);
 var io = require('socket.io')(server);
+var socketioJwt = require('socketio-jwt');
 var routes = require('./routes/index.js');
 // make a server by express
 app.set('port', process.env.PORT || 3000);
@@ -18,6 +19,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use('/', routes);
+io.set('authorization', socketioJwt.authorize({
+    secret: "12345678",
+    handshake: true
+}));
 io.clients((err, cli) => {
     if (err) throw err;
     console.log(cli);
@@ -28,10 +33,12 @@ io.on('connection', (socket) => {
     dbcrud.connect(); 
     let f_timestamp = new Date().valueOf();
     socket.on('new user', (uid)=> {
-        socket.user_id = uid;
+        socket.uid = uid;
         socket.login_time = new Date().valueOf();
         io.to(socket.id).emit('welcome message', "Welcome to chat room If you need help  plz enter in ", "<strong>.help</strong>")  
-        dbcrud.user_add(socket);
+        dbcrud.user_login(socket).exec((err, docs) => {
+            console.log("update:\n" + docs);
+        });
     }); 
     socket.on('online', () => {
         dbcrud.user_online().exec((err, docs) => {
@@ -64,13 +71,12 @@ io.on('connection', (socket) => {
         }
     });
     socket.on('disconnect', () => {
-        if (!socket.user_id) socket.user_id = 'Someone';
-        io.emit('leave message', socket.user_id + " is out");
+        if (!socket.uid) socket.uid = 'Someone';
+        io.emit('leave message', socket.uid + " is out");
         dbcrud.user_login_out(socket).exec(() => {
             dbcrud.user_online().exec((err, docs) => {
                 if (err) throw err;
                 io.emit('online', docs);
-                console.log('emit');
             });
         });
        

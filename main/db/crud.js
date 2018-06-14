@@ -9,25 +9,27 @@ class crud {
         this.db = mongoose.connect('mongodb://localhost:27017/mydb');
         this.db.Promise = global.Promise;
     }
-    user_add(socket) {
+    user_add(profile) {
         const newuser = new u({
-            "uid": socket.user_id,
-            "pw":null,
-            "online": true,
-            "socket_id": socket.id,
-            "login_time": socket.login_time,
+            "uid": profile.uid,
+            "pw": profile.pw,
+            "email":profile.email,
+            "online": false,
+            "socket_id": "",
+            "login_time": "",
         });
         newuser.save(function (err) {if(err) throw err });
         console.log(newuser+" is save");
     }
-    newuser(obj) {
-        return u.find({ "uid": id });
+   
+    user_find(uid, cb) {
+        return u.findOne({ "uid": uid }, cb);
     }
-    user_login(id,pw) {
-        return u.find({ "uid": id, "pw": pw });
+    user_login(socket) {
+        return u.update({ "uid": socket.uid }, {"online":true,"socket_id":socket.id,"login_time":socket.login_time});
     }
     user_login_out(socket) {
-        return u.update({ "uid": socket.user_id }, { "online": false, "socket_id":null});
+        return u.update({ "socket_id": socket.id }, { "online": false, "socket_id":null,"login_time":null});
     }
     user_online() {
         return u.find({ "online": true });

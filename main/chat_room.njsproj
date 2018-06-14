@@ -29,6 +29,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="authenticateAPI.js" />
     <Compile Include="SSL\SSL.js">
       <SubType>Code</SubType>
     </Compile>
@@ -52,9 +53,6 @@
     </Compile>
     <Compile Include="server.js" />
     <Content Include="public\html\login.html">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="public\html\new.html">
       <SubType>Code</SubType>
     </Content>
     <Content Include="SSL\yourcert.pem" />
