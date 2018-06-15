@@ -8,7 +8,10 @@
         var id = $('#ctid').val();
         var pw = $('#ctpw').val();
         if ($('#rectpw').val() != pw) {
-            alert("pw wrong");
+            $("#ctmsg").text("Make sure you enter in the password correctly");
+            $("#ctpw").val("");
+            $("#rectpw").val("");
+            return false;
         }
         $.post("/newAccount", {
             email: Email,
@@ -17,10 +20,13 @@
         }).done((result) => {
             var data = result.pageData;
             if (data.err) {
-                console.log(data.err);
+                $("#ctmsg").text(data.err);
             }
             if (data.msg) {
-                console.log(data.msg);
+                $("#login-page").fadeIn();
+                $('#lgid').val(id);
+                $('#lgpw').val(pw);
+                $('#lgmsg').text("uid "+id +" Register successfully Now you can log in");
             }
 
         });
@@ -33,11 +39,16 @@
             uid: id,
             pw: pw
         }).done((data) => {
-            if (data.err) console.log(data.err);
+            if (data.err) {
+                $('#lgmsg').text(data.err);
+                if (data.type == "u") {
+                    $('#lgid').val(""); 
+                }
+                $('#lgpw').val("");
+            }
             if (data.token) {
                 user_s._token = data.token;
                 user_s.connectSocket('/');
-
                 $('#u').val(user_s.decodedJWT().uid);
                 $("#creat-page").remove();
                 $("#login-page").fadeOut();
@@ -92,8 +103,7 @@ user.prototype.connectSocket = function (namespace) {
             headers: {
                 'x-access-token': this._token
             }
-        })
-        console.log("connect in");
+        }) 
         socket.emit('new user', uid);
         socket.emit('online');
     });

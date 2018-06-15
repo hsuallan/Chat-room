@@ -45,7 +45,14 @@ body {
         top: 40%;
         width: 100%;
     }
+p {
+    font:600;
+    color:aqua;
+    font: 20px Helvetica;
+    background: #000;
+    width:100%;
 
+}
 form {
     position: absolute;
     background: #000;

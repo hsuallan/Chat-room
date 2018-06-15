@@ -1,12 +1,13 @@
 ﻿const u = require("./users");
-const m = require("./msg")
+const m = require("./msg");
 const mongoose = require("mongoose");
+const cfg = require("../config/config");
 class crud {
     constructor() {
         this.db;
     }
     connect() {
-        this.db = mongoose.connect('mongodb://localhost:27017/mydb');
+        this.db = mongoose.connect(cfg.DB);
         this.db.Promise = global.Promise;
     }
     user_add(profile) {

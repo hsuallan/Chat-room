@@ -2,16 +2,17 @@
 var express = require('express');
 var app = require("express")();
 var path = require('path');
+var socketioJwt = require('socketio-jwt');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
+var https = require('https');
 var debug = require('debug');
 var crud = require("./db/crud");
 var ssl = require('./SSL/SSL');
-var https = require('https');
 var server = https.createServer(ssl.options, app);
 var io = require('socket.io')(server);
-var socketioJwt = require('socketio-jwt');
 var routes = require('./routes/index.js');
+var cfg = require("./config/config");
 // make a server by express
 app.set('port', process.env.PORT || 3000);
 app.use(bodyParser.json());
@@ -20,7 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use('/', routes);
 io.set('authorization', socketioJwt.authorize({
-    secret: "12345678",
+    secret: cfg.jwt_secret,
     handshake: true
 }));
 io.clients((err, cli) => {

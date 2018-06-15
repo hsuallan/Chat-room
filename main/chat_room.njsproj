@@ -30,6 +30,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="authenticateAPI.js" />
+    <Compile Include="config\config.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="SSL\SSL.js">
       <SubType>Code</SubType>
     </Compile>
@@ -48,13 +51,7 @@
     <Compile Include="routes\index.js">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="routes\login.js">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="server.js" />
-    <Content Include="public\html\login.html">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="SSL\yourcert.pem" />
     <Content Include="SSL\yourcsr.csr" />
     <Content Include="SSL\yourkey.pem" />
@@ -68,6 +65,7 @@
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="config\" />
     <Folder Include="SSL\" />
     <Folder Include="db\" />
     <Folder Include="public\" />

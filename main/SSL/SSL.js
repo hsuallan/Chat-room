@@ -1,9 +1,9 @@
 ﻿var fs = require('fs');
-
+var cfg = require('../config/config');
 //ssl license
 
-var keyPath = 'SSL/yourkey.pem';
-var certPath = 'SSL/yourcert.pem';
+var keyPath =cfg.keyPath;
+var certPath = cfg.certPath;
 
 var hskey = fs.readFileSync(keyPath);
 var hscert = fs.readFileSync(certPath);
