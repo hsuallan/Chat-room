@@ -1,5 +1,6 @@
 ﻿const u = require("./users");
 const m = require("./msg");
+const o = require("./online");
 const mongoose = require("mongoose");
 const cfg = require("../config/config");
 class crud {
@@ -15,9 +16,6 @@ class crud {
             "uid": profile.uid,
             "pw": profile.pw,
             "email":profile.email,
-            "online": false,
-            "socket_id": "",
-            "login_time": "",
         });
         newuser.save(function (err) {if(err) throw err });
         console.log(newuser+" is save");
@@ -27,13 +25,26 @@ class crud {
         return u.findOne({ "uid": uid }, cb);
     }
     user_login(socket) {
-        return u.update({ "uid": socket.uid }, {"online":true,"socket_id":socket.id,"login_time":socket.login_time});
+        const no = new o({
+            "uid": socket.uid ,
+            "socket_id": socket.id ,
+            "login_time": socket.login_time,
+        });
+        no.save((err) => { if (err) throw err; });
+        console.log(no["uid"] + "is login");
+        // return u.update({ "uid": socket.uid }, {"online":true,"socket_id":socket.id,"login_time":socket.login_time});
     }
     user_login_out(socket) {
-        return u.update({ "socket_id": socket.id }, { "online": false, "socket_id":null,"login_time":null});
+        o.deleteOne({ "uid": socket.uid }, (err) => {
+            if (err) throw err;
+            console.log(socket.uid + " log out");
+        });
     }
     user_online() {
-        return u.find({ "online": true });
+        return o.find();
+    }
+    is_online(uid) {
+        return o.findOne({"uid":uid});
     }
     msg_add(uid, msg) {
         const newmsg = new m({

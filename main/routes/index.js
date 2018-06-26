@@ -29,18 +29,27 @@ router.post('/login', function (req, res) {
                 type: "p"
             });
         }
+        dbcrud.is_online(account.uid).exec((err, docs) => {
+            if (err) throw err;
+            var profile = {
+                uid: account.uid,
+                email: account.email
+            };
+            if (docs == null) {//沒上線
+                
+                var token = jwt.sign(profile, cfg.jwt_secret, { expiresIn: 60 * 360000 });
+                return res.status(200).json({ token: token });
+            }
+            else {
+                console.log(docs);
+                return res.status(203).json({
+                    err: "User is online now ,please log out from other device",
+                    type: "x"
+                });
 
-        var profile = {
-            uid: account.uid,
-            online: account.online,
-            socket_id: account.sockt_id,
-            email: account.email
-        };
-
-        if (account.pw == req.body.pw) {
-            var token = jwt.sign(profile,cfg.jwt_secret, { expiresIn: 60 * 360000 });
-            return res.status(200).json({ token: token });
-        }
+            }
+        });
+       
 
     });
 

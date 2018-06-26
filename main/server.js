@@ -33,13 +33,11 @@ io.on('connection', (socket) => {
     const dbcrud = new crud();
     dbcrud.connect(); 
     let f_timestamp = new Date().valueOf();
-    socket.on('new user', (uid)=> {
+    socket.on('user login', (uid)=> {
         socket.uid = uid;
         socket.login_time = new Date().valueOf();
         io.to(socket.id).emit('welcome message', "Welcome to chat room If you need help  plz enter in ", "<strong>.help</strong>")  
-        dbcrud.user_login(socket).exec((err, docs) => {
-            console.log("update:\n" + docs);
-        });
+        dbcrud.user_login(socket);
     }); 
     socket.on('online', () => {
         dbcrud.user_online().exec((err, docs) => {
@@ -74,13 +72,11 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         if (!socket.uid) socket.uid = 'Someone';
         io.emit('leave message', socket.uid + " is out");
-        dbcrud.user_login_out(socket).exec(() => {
-            dbcrud.user_online().exec((err, docs) => {
-                if (err) throw err;
-                io.emit('online', docs);
-            });
+        dbcrud.user_login_out(socket);
+        dbcrud.user_online().exec((err, docs) => {
+            if (err) throw err;
+            io.emit('online', docs);
         });
-       
     });
 });
 

@@ -104,7 +104,7 @@ user.prototype.connectSocket = function (namespace) {
                 'x-access-token': this._token
             }
         }) 
-        socket.emit('new user', uid);
+        socket.emit('user login', uid);
         socket.emit('online');
     });
 

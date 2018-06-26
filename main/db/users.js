@@ -2,10 +2,7 @@
 const users = mongoose.Schema({
     "uid": String,
     "email":String,
-    "pw":String,
-    "online": Boolean,
-    "socket_id": String,
-    "login_time":Number,
+    "pw":String, 
 },
     {
         "versionKey": false

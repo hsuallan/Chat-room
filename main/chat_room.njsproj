@@ -33,6 +33,9 @@
     <Compile Include="config\config.js">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="db\online.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="SSL\SSL.js">
       <SubType>Code</SubType>
     </Compile>
