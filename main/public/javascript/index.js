@@ -1,5 +1,6 @@
-﻿$(function () {
-    //let socket = io();
+﻿var Seed;
+$(function () {
+    //let socket = io(); 
     var user_s = new user();
     var uid;
     //login in
@@ -7,19 +8,25 @@
         var Email = $('#ctmail').val();
         var id = $('#ctid').val();
         var pw = $('#ctpw').val();
+        var otp = $('#ctotp').val();
         if ($('#rectpw').val() != pw) {
             $("#ctmsg").text("Make sure you enter in the password correctly");
             $("#ctpw").val("");
             $("#rectpw").val("");
             return false;
         }
+        console.log(Seed);
         $.post("/newAccount", {
             email: Email,
             uid: id,
-            pw: pw
+            pw: pw,
+            otp: otp,
+            seed: JSON.stringify(Seed)
         }).done((result) => {
             var data = result.pageData;
             if (data.err) {
+                $("#ctpw").val("");
+                $("#rectpw").val("");
                 $("#ctmsg").text(data.err);
             }
             if (data.msg) {
@@ -35,15 +42,18 @@
     $('#lgform').submit(() => {
         var id = $('#lgid').val();
         var pw = $('#lgpw').val();
+        var otp = $('#lgotp').val();
         $.post("/login", {
             uid: id,
-            pw: pw
+            pw: pw,
+            otp:otp
         }).done((data) => {
             if (data.err) {
                 $('#lgmsg').text(data.err);
                 if (data.type == "u") {
                     $('#lgid').val(""); 
                 }
+                $('#lgotp').val("");
                 $('#lgpw').val("");
             }
             if (data.token) {
@@ -61,6 +71,12 @@
     });
     $('#nc').click(() => {
         $("#login-page").fadeOut();
+        $.post("/otpseed", {}).done((result) => {
+            let data = result.data;
+            Seed = result.seed;
+            console.log(Seed);
+            $("#otp").attr("src", data);
+        });
     });
     $('#bk').click(() => {
         $("#login-page").fadeIn();

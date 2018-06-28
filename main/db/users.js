@@ -2,7 +2,8 @@
 const users = mongoose.Schema({
     "uid": String,
     "email":String,
-    "pw":String, 
+    "pw": String, 
+    "otp":String
 },
     {
         "versionKey": false

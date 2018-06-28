@@ -15,7 +15,8 @@ class crud {
         const newuser = new u({
             "uid": profile.uid,
             "pw": profile.pw,
-            "email":profile.email,
+            "email": profile.email,
+            "otp":profile.otp
         });
         newuser.save(function (err) {if(err) throw err });
         console.log(newuser+" is save");

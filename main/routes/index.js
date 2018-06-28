@@ -4,6 +4,8 @@ var jwt = require('jsonwebtoken');
 var crud = require("../db/crud");
 var router = express.Router();
 var cfg = require("../config/config");
+var speakeasy = require('speakeasy');
+var qrcode = require("qrcode");
 const dbcrud = new crud();
 
 dbcrud.connect();
@@ -12,6 +14,11 @@ router.get('/', function (req, res) {
 });
 router.post('/login', function (req, res) {
     dbcrud.user_find(req.body.uid, function (err, account) {
+        var seed = JSON.parse(account.otp);
+        var token = speakeasy.totp({
+            secret: seed["base32"],
+            encoding: 'base32'
+        });
         if (err) {
             return res.status(203).json({
                 err: err.msg
@@ -27,6 +34,12 @@ router.post('/login', function (req, res) {
             return res.status(203).json({
                 err: "Wrong password Make sure password is correctly",
                 type: "p"
+            });
+        }
+        if (token != req.body.otp) {
+            return res.status(203).json({
+                err: "Wrong otp Make sure you enter in correct otp or correct time",
+                type: "o"
             });
         }
         dbcrud.is_online(account.uid).exec((err, docs) => {
@@ -55,7 +68,6 @@ router.post('/login', function (req, res) {
 
 })
 router.post('/newAccount', function (req, res) {
-
     dbcrud.user_find(req.body.uid, function (err, account) {
         if (err) {
             return res.status(203).json({
@@ -72,12 +84,24 @@ router.post('/newAccount', function (req, res) {
 
                 }
             });
+        } 
+        var seed = JSON.parse(req.body.seed);
+        var token = speakeasy.totp({
+            secret: seed["base32"],
+            encoding: 'base32'
+        });
+        if (token != req.body.otp) {
+            return res.status(203).json({
+                pageData: {
+                    err: "err otp make sure you enter correct otp or have correct time"
+                }
+            });
         }
-     
         var profile = {
             "uid": req.body.uid,
             "pw": req.body.pw,
-            "email": req.body.email
+            "email": req.body.email,
+            "otp": req.body.seed//not json obj!!!
         };
 
         dbcrud.user_add(profile);
@@ -90,4 +114,13 @@ router.post('/newAccount', function (req, res) {
 
 
 });
+router.post("/otpseed", (req, res) => {
+    var seed = speakeasy.generateSecret({ name: "chat-room" });
+    qrcode.toDataURL(seed.otpauth_url, (err, data) => {
+        return res.status(200).json({
+            seed: seed,
+            data:data
+        })
+    });
+})
 module.exports = router;
