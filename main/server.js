@@ -58,15 +58,42 @@ io.on('connection', (socket) => {
     });
     socket.on('chat room', (uid, msg) => {
         if (msg == '.help') {
-            io.to(socket.id).emit('alert', 'Enter in message then you can send, Enjoy chat with people');
-        } else {
-            let l_timestamp = new Date().valueOf();
-            if (l_timestamp - f_timestamp > 1000) {
-                io.emit('chat room', uid, msg);
-                dbcrud.msg_add(uid, msg);
+            io.to(socket.id).emit('alert',
+                'Enter in message then you can send, Enjoy chat with people\n' +
+                'You can use @uid to send private massage\n' +
+                'Notice : all Private msg will no be store'
+                );
+        }
+        else if (msg.match("^@")) {
+             let msg_arr = msg.split(" ");//a[0] = id ,a[>1] = msgs
+             let duid = msg_arr[0];//distinct uid
+             duid = duid.substr(1);
+             dbcrud.is_online(duid).exec((err, doc) => {
+                if (err) throw err;
+                if (doc == null || doc["uid"]==socket.uid) {//not online
+                    io.to(socket.id).emit('alert', 'Make sure you enter an online id');
+                }
+                else {
+                    let dsid = doc["socket_id"];
+                    msg = msg.substr(duid.length + 1);
+                    let l_timestamp = new Date().valueOf();
+                    if (l_timestamp - f_timestamp > 1000) {
+                        io.to(dsid).emit("pm", uid, msg);
+                        io.to(socket.id).emit("pm", uid, msg);
+                        f_timestamp = new Date().valueOf();
+                    }
+                    else { io.to(socket.id).emit('alert', "Don't message flooding"); }
+                }
+             });
+        }
+        else {
+             let l_timestamp = new Date().valueOf();
+             if (l_timestamp - f_timestamp > 1000) {
+                    io.emit('chat room', uid, msg);
+                    dbcrud.msg_add(uid, msg);
                 f_timestamp = new Date().valueOf();
-            }
-            else { io.to(socket.id).emit('alert', "Don't message flooding"); }
+             }
+              else { io.to(socket.id).emit('alert', "Don't message flooding"); }
         }
     });
     socket.on('disconnect', () => {

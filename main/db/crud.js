@@ -20,7 +20,6 @@ class crud {
         newuser.save(function (err) {if(err) throw err });
         console.log(newuser+" is save");
     }
-   
     user_find(uid, cb) {
         return u.findOne({ "uid": uid }, cb);
     }
@@ -32,7 +31,6 @@ class crud {
         });
         no.save((err) => { if (err) throw err; });
         console.log(no["uid"] + "is login");
-        // return u.update({ "uid": socket.uid }, {"online":true,"socket_id":socket.id,"login_time":socket.login_time});
     }
     user_login_out(socket) {
         o.deleteOne({ "uid": socket.uid }, (err) => {

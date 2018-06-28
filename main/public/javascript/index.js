@@ -121,6 +121,9 @@ user.prototype.connectSocket = function (namespace) {
     socket.on('chat room', (id, msg) => {
         $('#messages').append($("<li>").text(id + " : " + msg));
     });
+    socket.on('pm', (id, msg) => {
+        $('#messages').append($('<li style ="background:pink;color:blue;">').text(id + " : " + msg+"        "+"<--private massage")); 
+    });
     socket.on('leave message', (msg) => {//someone leave call it
         $('#messages').append($("<li>").text(msg));
     });
