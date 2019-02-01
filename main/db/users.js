@@ -1,9 +1,10 @@
 ﻿const mongoose = require("mongoose");
 const users = mongoose.Schema({
     "uid": String,
-    "email":String,
     "pw": String, 
-    "otp":String
+    "otp":String,
+    "passkey":String
+    
 },
     {
         "versionKey": false

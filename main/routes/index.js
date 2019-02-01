@@ -1,13 +1,19 @@
-﻿var express = require('express');
-var path = require("path");
-var jwt = require('jsonwebtoken');
-var crud = require("../db/crud");
-var router = express.Router();
-var cfg = require("../config/config");
-var speakeasy = require('speakeasy');
-var qrcode = require("qrcode");
+﻿const express = require('express');
+const path = require("path");
+const jwt = require('jsonwebtoken');
+const crud = require("../db/crud");
+const router = express.Router();
+const cfg = require("../config/config");
+const speakeasy = require('speakeasy');
+const qrcode = require("qrcode");
 const dbcrud = new crud();
+const crypto = require("crypto");
 
+function cryptothing(key,thing){
+    let hmac = crypto.createHmac("sha256",key);
+    hmac.update(thing);
+    return hmac.digest('hex');
+}
 dbcrud.connect();
 router.get('/', function (req, res) {
     res.sendfile(path.join('public/html/index.html'));
@@ -30,7 +36,7 @@ router.post('/login', function (req, res) {
                 type:"u"
             });
         }
-        if (account.pw != req.body.pw) {
+        if ( cryptothing(account.passkey,req.body.pw) != account.pw) {
             return res.status(203).json({
                 err: "Wrong password Make sure password is correctly",
                 type: "p"
@@ -41,17 +47,19 @@ router.post('/login', function (req, res) {
                 err: "Wrong otp Make sure you enter in correct otp or correct time",
                 type: "o"
             });
-        }
+        } 
+        var profile = {
+                uid: account.uid,
+            };
+        var jwttoken = jwt.sign(profile, cfg.jwt_secret, { expiresIn: 60 * 360000 });
+        return res.status(200).json({ token: jwttoken });
+/*                
         dbcrud.is_online(account.uid).exec((err, docs) => {
             if (err) throw err;
-            var profile = {
-                uid: account.uid,
-                email: account.email
-            };
+           
             if (docs == null) {//沒上線
                 
-                var token = jwt.sign(profile, cfg.jwt_secret, { expiresIn: 60 * 360000 });
-                return res.status(200).json({ token: token });
+                
             }
             else {
                 console.log(docs);
@@ -62,7 +70,7 @@ router.post('/login', function (req, res) {
 
             }
         });
-       
+       */
 
     });
 
@@ -80,7 +88,7 @@ router.post('/newAccount', function (req, res) {
             return res.status(203).json({
                 pageData: {
 
-                    err: "uid " + account.uid + " already registered please use other uid"
+                    err: "uid " + account.uid + " already registered please use other id"
 
                 }
             });
@@ -97,10 +105,11 @@ router.post('/newAccount', function (req, res) {
                 }
             });
         }
+        var passkey = new Date().valueOf().toString().substr(6);
         var profile = {
             "uid": req.body.uid,
-            "pw": req.body.pw,
-            "email": req.body.email,
+            "pw":cryptothing(passkey,req.body.pw) ,
+            "passkey" : passkey,
             "otp": req.body.seed//not json obj!!!
         };
 

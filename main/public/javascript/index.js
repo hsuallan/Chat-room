@@ -5,7 +5,6 @@ $(function () {
     var uid;
     //login in
     $("#ctform").submit(() => {
-        var Email = $('#ctmail').val();
         var id = $('#ctid').val();
         var pw = $('#ctpw').val();
         var otp = $('#ctotp').val();
@@ -17,7 +16,6 @@ $(function () {
         }
         console.log(Seed);
         $.post("/newAccount", {
-            email: Email,
             uid: id,
             pw: pw,
             otp: otp,
@@ -149,9 +147,8 @@ user.prototype.connectSocket = function (namespace) {
     socket.on('online', (docs) => {
         $('#oul').empty();
         $('#oul').append($("<content>").text("Now online : " + docs.length));
-        docs.reverse();
-        docs.forEach((c) => {
-            $('#oul').append($("<li>").text("Uid : " + c.uid));
+        docs.forEach((value) => {
+            $('#oul').append($("<li>").text(`Uid :  ${value}`));
         });
     });
 }
